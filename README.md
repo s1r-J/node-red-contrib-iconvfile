@@ -14,7 +14,6 @@ For supported encodings, refer to [iconv-lite wiki page](https://github.com/asht
 ## Install
 
 [![NPM](https://nodei.co/npm/node-red-contrib-iconvfile.png)](https://nodei.co/npm/node-red-contrib-iconvfile/)
-[npm](https://www.npmjs.com/package/node-red-contrib-iconvfile)
 
 ## Licence
 
