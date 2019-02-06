@@ -1,0 +1,127 @@
+
+<script type="text/x-red" data-template-name="iconvfile-in">
+    <div class="form-row">
+         <label for="node-input-filename"><i class="fa fa-file"></i> <span data-i18n="iconvfile-in.label.filename"></span></label>
+         <input id="node-input-filename" type="text" data-i18n="[placeholder]iconvfile-in.label.filename">
+    </div>
+    <div class="form-row">
+        <label for="node-input-format"><i class="fa fa-sign-out"></i> <span data-i18n="iconvfile-in.label.outputas"></span></label>
+        <select id="node-input-format">
+            <option value="string" data-i18n="iconvfile-in.output.string"></option>
+            <option value="lines" data-i18n="iconvfile-in.output.lines"></option>
+            <option value="" data-i18n="iconvfile-in.output.buffer"></option>
+            <option value="stream" data-i18n="iconvfile-in.output.stream"></option>
+        </select>
+    </div>
+    <div class="form-row form-row-iconvfile-in-charset-options">
+        <label for="node-input-charset"><i class="fa fa-sign-in"></i> <span data-i18n="iconvfile-in.label.charset"></span></label>
+        <input type="text" id="node-input-charset" data-i18n="[placeholder]iconvfile-in.label.charset">
+    </div>
+    <div class="form-row">
+        <label></label>
+        <input type="checkbox" id="node-input-sendError" style="width:auto">
+        <label style="width:auto; margin-bottom:0; vertical-align: middle;" for="node-input-sendError" data-i18n="iconvfile-in.label.sendError"></label>
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="iconvfile-in.label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]iconvfile-in.label.name">
+    </div>
+    <div class="form-tips"><span data-i18n="iconvfile-in.tip"></span></div>
+</script>
+
+<script type="text/x-red" data-help-name="iconvfile-in">
+    <p>Reads the contents of a file as either a string in the charset that you like or binary buffer.</p>
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt class="optional">filename <span class="property-type">string</span></dt>
+        <dd>if not set in the node configuration, this property sets the filename to read.</dd>
+    </dl>
+    <h3>Outputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">string | buffer</span></dt>
+        <dd>The contents of the file as either a string in the charset that you like or binary buffer.</dd>
+        <dt class="optional">filename <span class="property-type">string</span></dt>
+        <dd>If not configured in the node, this optional property sets the name of the file to be read.</dd>
+        <dt class="optional">error <span class="property-type">object</span></dt>
+        <dd><i>deprecated</i>: If enabled in the node, when the node hits an error
+            reading the file, it will send a message with no <code>payload</code>
+            and this <code>error</code> property set to the error details. This
+            mode of behaviour is deprecated and not enabled by default for new
+            instances of the node. See below for more information.</dd>
+    </dl>
+    <h3>Details</h3>
+    <p>This node extends Node-RED core 'file in' node to read the file in the specified charset.</p>
+    <p>The filename should be an absolute path, otherwise it will be relative to
+    the working directory of the Node-RED process.</p>
+    <p>On Windows, path separators may need to be escaped, for example: <code>\\Users\\myUser</code>.</p>
+    <p>Optionally, a text file can be split into lines, outputting one message per line, or a binary file
+    split into smaller buffer chunks - the chunk size being operating system dependant, but typically 64k (Linux/Mac) or 41k (Windows).</p>
+    <p>When split into multiple messages, each message will have a <code>parts</code>
+    property set, forming a complete message sequence.</p>
+    <h4>Legacy error handling</h4>
+    <p>Before Node-RED 0.17, if this node hit an error whilst reading the file, it would
+    send a message with no <code>msg.payload</code> and <code>msg.error</code> set to the
+    details of the error. This is a deprecated mode of behaviour for the node that new
+    instances will not do. If required, this mode can be re-enabled within the node
+    configuration.</p>
+    <p>Errors should be caught and handled using a Catch node.</p>
+    <h3>References</h3>
+    <ul>
+        <li><a href="https://github.com/ashtuchkin/iconv-lite/wiki/Supported-Encodings">Supported Encodings</a></li>
+    </ul>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('iconvfile-in',{
+        category: 'storage-input',
+        defaults: {
+            name: {value:""},
+            filename: {value:""},
+            format: {value:"string"},
+            charset: {
+                value:"",
+                required: function() {
+                    return this.format === "string" || this.format === "lines";
+                }
+            },
+            chunk: {value:false},
+            sendError: {value: false}
+        },
+        color:"#decbb1",
+        inputs:1,
+        outputs:1,
+        outputLabels: function(i) {
+            return (this.format === "string") ? this.charset + " string" : "binary buffer";
+        },
+        icon: "file-in.png",
+        label: function() {
+            return this.name||this.filename||this._("iconvfile-in.label.filelabel");
+        },
+        labelStyle: function() {
+            return this.name?"node_label_italic":"";
+        },
+        paletteLabel: 'iconvfile in',
+        oneditprepare: function() {
+            if (this.sendError === undefined) {
+                $("#node-input-sendError").prop("checked",true);
+            }
+            $("#node-input-format").on("change",function() {
+                if ($("#node-input-format").val() === "string") {
+                    $("#buffer-input-type").hide();
+                    $("#line-input-type").show();
+                }
+                else {
+                    $("#buffer-input-type").show();
+                    $("#line-input-type").hide();
+                }
+            });
+            $("#node-input-format").on("change",function() {
+                if (this.value === "string" || this.value === "lines") {
+                    $(".form-row-iconvfile-in-charset-options").show();
+                } else {
+                    $(".form-row-iconvfile-in-charset-options").hide();
+                }
+            });
+        }
+    });
+</script>

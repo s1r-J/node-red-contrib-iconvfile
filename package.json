@@ -1,0 +1,39 @@
+{
+  "name": "node-red-contrib-iconvfile",
+  "version": "0.1.0",
+  "description": "Node-RED node to read a file and write to a file in the charset that you want (not only utf8).",
+  "main": "node.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/s1r-J/node-red-contrib-iconvfile.git"
+  },
+  "node-red": {
+    "nodes": {
+      "iconvfile-in": "iconvfile-in.js",
+      "iconvfile-out": "iconvfile-out.js"
+    }
+  },
+  "dependencies": {
+    "fs-extra": "^7.0.1",
+    "iconv-lite": "^0.4.24",
+    "os": "^0.1.1",
+    "path": "^0.12.7"
+  },
+  "keywords": [
+    "node-red",
+    "file",
+    "iconv",
+    "charset",
+    "encoding",
+    "multi-byte"
+  ],
+  "author": "s1r-J",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/s1r-J/node-red-contrib-iconvfile/issues"
+  },
+  "homepage": "https://github.com/s1r-J/node-red-contrib-iconvfile#readme"
+}
