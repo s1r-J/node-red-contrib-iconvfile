@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-iconvfile",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Node-RED node to read a file and write to a file in the charset that you want (not only utf8).",
   "main": "node.js",
   "scripts": {

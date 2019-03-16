@@ -1,6 +1,8 @@
 node-red-contrib-iconvfile
 ====
 
+# You no longer need to use these nodes, for Node-RED 0.20.0 released. Now core file node is able to encode in many charsets.
+
 Node-RED node to read a file and write to a file in the charset that you want (not only utf8).
 
 ## Description
